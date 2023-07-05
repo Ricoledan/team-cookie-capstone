@@ -16,12 +16,12 @@ contract PrivacySecurity {
     }
 
     function restrictField(string memory _field) public {
-        require(privacyControl.privacySettings(msg.sender), "Access not authorized");
+        require(privacyControl.doesPrivacySettingsExist(msg.sender), "Access not authorized");
         securitySettings[msg.sender].restrictedFields[_field] = true;
     }
 
     function unrestrictField(string memory _field) public {
-        require(privacyControl.privacySettings(msg.sender), "Access not authorized");
+        require(privacyControl.doesPrivacySettingsExist(msg.sender), "Access not authorized");
         delete securitySettings[msg.sender].restrictedFields[_field];
     }
 

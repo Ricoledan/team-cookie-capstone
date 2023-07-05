@@ -46,4 +46,12 @@ contract PrivacyControl {
 
         privacySettings[msg.sender].exists = true;
     }
+
+    function isAccessAllowed(address citizen, address agency) public view returns (bool) {
+        return privacySettings[citizen].allowAccess[agency];
+    }
+
+    function doesPrivacySettingsExist(address citizen) public view returns (bool) {
+        return privacySettings[citizen].exists;
+    }
 }
