@@ -1,6 +1,6 @@
 # Team Cookie Capstone Project
 
-🍪 This capstone project addresses a use case in which a local government agency manages and issues identification
+🍪This capstone project addresses a use case in which a local government agency manages and issues identification
 documents such as a driver's license.
 The agency is looking to modernize its processes by leveraging a
 blockchain solution to address slow processing times for renewing and issuing licenses, verifying the authenticity of a
@@ -83,6 +83,14 @@ The project follows the following folder structure:
 
 ### Quick Start
 
+Set local development to use Node version 18.16.1 (.nvmrc)
+
 ```bash
+nvm use 
 ```
 
+Install dependencies for the client
+
+```bash
+cd client && npm i
+```
