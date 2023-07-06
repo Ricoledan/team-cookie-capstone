@@ -94,3 +94,9 @@ Install dependencies for the client
 ```bash
 cd client && npm i
 ```
+
+Run the Frontend Client 
+
+```bash
+cd client && npm run start
+```
