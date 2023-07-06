@@ -1,5 +1,5 @@
-const Identity = artifacts.require('Identity');
+const Identity = artifacts.require("Identity");
 
-module.exports = function (deployer) {
-deployer.deploy(Identity);
+module.exports = function(deployer) {
+    deployer.deploy(Identity);
 };
