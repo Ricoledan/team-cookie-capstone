@@ -1,40 +1,15 @@
-'use client';
+'use strict';
 
-import { useEffect, useState } from 'react';
 import { Card, Title, Text } from '@tremor/react';
-import Search from './search';
-import ApplicationTable from './table';
 
-export const dynamic = 'force-dynamic';
-
-export default function IndexPage({
-                                    searchParams
-                                  }: {
-  searchParams: { q: string };
-}) {
-  const [users, setUsers] = useState([]);
-
-  useEffect(() => {
-    async function fetchUsers() {
-      // Assuming you have a local Ganache instance running at http://localhost:8545
-      const response = await fetch('http://localhost/api/identities');
-      const data = await response.json();
-      setUsers(data);
-    }
-
-    fetchUsers();
-  }, []);
-
-  const search = searchParams.q ?? '';
-  const filteredUsers = users.filter(user => user.name.includes(search));
-
+export default function IndexPage() {
   return (
-    <main className="p-4 md:p-10 mx-auto max-w-7xl">
-      <Title>Application Status</Title>
-      <Text>A list of applications with various statuses retrieved.</Text>
-      <Search />
-      <Card className="mt-6">
-        <ApplicationTable users={filteredUsers} />
+    <main className='p-4 md:p-10 mx-auto max-w-7xl'>
+      <Card className='mt-6 relative'>
+        <div
+          className='absolute inset-0 w-full h-96 bg-cover bg-center'
+          style={{ backgroundImage: `url(https://images.unsplash.com/photo-1667453466805-75bbf36e8707?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2832&q=80)` }}
+        ></div>
       </Card>
     </main>
   );

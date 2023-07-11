@@ -12,6 +12,7 @@ contract Identity {
     }
 
     mapping(string => Citizen) public citizens;
+    string[] public citizenDINs;
 
     event IdentityCreated(string indexed din);
     event IdentityUpdated(string indexed din);
@@ -33,6 +34,8 @@ contract Identity {
         citizen.residentialAddress = _residentialAddress;
         citizen.exists = true;
 
+        citizenDINs.push(_din);
+
         emit IdentityCreated(_din);
     }
 
@@ -52,5 +55,14 @@ contract Identity {
         citizen.residentialAddress = _residentialAddress;
 
         emit IdentityUpdated(_din);
+    }
+
+    function getIdentityCount() public view returns (uint) {
+        return citizenDINs.length;
+    }
+
+    function getIdentity(string memory din) public view returns (string memory, string memory, string memory, uint256, string memory, bool) {
+        Citizen memory citizen = citizens[din];
+        return (citizen.din, citizen.ssn, citizen.fullName, citizen.dateOfBirth, citizen.residentialAddress, citizen.exists);
     }
 }

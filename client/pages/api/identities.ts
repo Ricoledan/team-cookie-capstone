@@ -1,10 +1,10 @@
 import Web3 from 'web3';
 
-const provider = new Web3.providers.HttpProvider('http://localhost:8545/'); // Update with your Ganache URL or Ethereum network URL
+const provider = new Web3.providers.HttpProvider('http://localhost:8545/');
 const web3 = new Web3(provider);
 
 async function getIdentities() {
-  const contractABI = [
+  const contractABI: any[] = [
     {
       "anonymous": false,
       "inputs": [
@@ -143,7 +143,7 @@ async function getIdentities() {
       "type": "function"
     }
   ];
-  const contractAddress = '0xD119849Ceefac75661bCF539b84BD80C6a9E410a'; // Replace with your contract address
+  const contractAddress: string = '0xD119849Ceefac75661bCF539b84BD80C6a9E410a';
 
   const contract = new web3.eth.Contract(contractABI, contractAddress);
   const dinList = await contract.methods.getAllDINs().call();

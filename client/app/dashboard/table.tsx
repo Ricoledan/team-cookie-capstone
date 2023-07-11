@@ -9,10 +9,15 @@ import {
 } from '@tremor/react';
 
 interface User {
-  id: number;
-  name: string;
-  username: string;
-  email: string;
+  din: string;
+  ssn: string;
+  fullName: string;
+  dateOfBirth: number;
+  residentialAddress: string;
+  exists: boolean;
+  type: string; // Add the additional properties here
+  status: string;
+  date: string;
 }
 
 export default async function ApplicationTable({ users }: { users: User[] }) {
@@ -28,13 +33,16 @@ export default async function ApplicationTable({ users }: { users: User[] }) {
       </TableHead>
       <TableBody>
         {users.map((user) => (
-          <TableRow key={user.id}>
-            <TableCell>{user.name}</TableCell>
+          <TableRow key={user.type}>
+            <TableCell>{user.type}</TableCell>
             <TableCell>
-              <Text>{user.username}</Text>
+              <Text>{user.status}</Text>
             </TableCell>
             <TableCell>
-              <Text>{user.email}</Text>
+              <Text>{user.fullName}</Text>
+            </TableCell>
+            <TableCell>
+              <Text>{user.date}</Text>
             </TableCell>
           </TableRow>
         ))}

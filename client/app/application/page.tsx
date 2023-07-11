@@ -8,9 +8,7 @@ export default function ApplicationPage() {
         <main className="p-4 md:p-10 mx-auto max-w-7xl">
             <Grid numItemsSm={1} numItemsLg={1} className="gap-6">
                 <div className="mt-6">
-                    <Card>
                         <Form />
-                    </Card>
                 </div>
             </Grid>
         </main>

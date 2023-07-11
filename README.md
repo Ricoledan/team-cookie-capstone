@@ -1,6 +1,6 @@
 # Team Cookie Capstone Project
 
-🍪This capstone project addresses a use case in which a local government agency manages and issues identification
+🍪 This capstone project addresses a use case in which a local government agency manages and issues identification
 documents such as a driver's license.
 The agency is looking to modernize its processes by leveraging a
 blockchain solution to address slow processing times for renewing and issuing licenses, verifying the authenticity of a
@@ -60,16 +60,16 @@ information.
 
 ### Next.js
 
-[Next.js](https://nextjs.org/) is a React framework for building server-side rendered and statically generated web
+[Next.js](https://nextjs.org/) The library for web and native user interfaces.
 
 ### Truffle
 
-[Truffle](https://trufflesuite.com/) is a development environment, testing framework and asset pipeline for Ethereum,
+[Truffle](https://trufflesuite.com/) The most comprehensive suite of tools for smart contract development.
 
 ### Ganache
 
-[Ganache](https://trufflesuite.com/ganache/) is a personal blockchain for rapid Ethereum and Corda distributed
-application
+[Ganache](https://trufflesuite.com/ganache/) is a personal Ethereum blockchain which you can use to run tests, execute
+commands, and inspect state while controlling how the chain operates.
 
 ### Project Structure
 
@@ -95,8 +95,42 @@ Install dependencies for the client
 cd client && npm i
 ```
 
-Run the Frontend Client 
+Run Ganache to run a local ethereum blockchain
 
 ```bash
-cd client && npm run start
+ganache
+```
+
+Compile and deploy contracts to the local Ganache network.
+For testing purposes, run all migrations from the beginning,
+regardless of whether they have been previously deployed.
+
+```bash
+truffle migrate — reset
+```
+
+Run the Frontend Client
+
+```bash
+cd client && npm run dev
+```
+
+### Helpful Commands
+
+Test a transaction using the Truffle console
+
+```bash
+truffle console
+```
+
+Creates a build folder and creates a JSON representation of the contract's methods in JSON format.
+
+```bash
+truffle compile 
+```
+
+Inspect a transaction on the network
+
+```javascript
+web3.eth.getTransaction('TRANSACTION_HASH').then(console.log)
 ```
