@@ -4,14 +4,19 @@ import { useEffect, useState } from 'react';
 import { Card, Title, Text } from '@tremor/react';
 import Search from './search';
 import ApplicationTable from './table';
+import Identity from '../../../build/contracts/Identity.json';
+import Web3 from 'web3';
 
-interface User {
+interface Citizen {
   din: string;
   ssn: string;
   fullName: string;
   dateOfBirth: number;
   residentialAddress: string;
   exists: boolean;
+}
+
+interface User extends Citizen {
   type: string;
   status: string;
   date: string;
@@ -20,69 +25,48 @@ interface User {
 export const dynamic = 'force-dynamic';
 
 export default function DashboardPage({
-                                        searchParams
+                                        searchParams,
                                       }: {
   searchParams: { q: string };
 }) {
-  const [users, setUsers] = useState<User[]>([
-    {
-      din: '123456789',
-      ssn: '123-45-6789',
-      fullName: 'John Doe',
-      dateOfBirth: 946684800000, // January 1, 2000
-      residentialAddress: '123 Main St, Anytown, USA',
-      exists: true,
-      type: 'Driver License',
-      status: 'Approved',
-      date: '07/11/2023'
-    },
-    {
-      din: '987654321',
-      ssn: '987-65-4321',
-      fullName: 'Jane Smith',
-      dateOfBirth: 915148800000, // January 1, 1999
-      residentialAddress: '456 Elm St, Anytown, USA',
-      exists: true,
-      type: 'Driver License',
-      status: 'Pending',
-      date: '07/11/2023'
-    }
-  ]);
+  const [users, setUsers] = useState<User[]>([]);
+
   const search = searchParams.q ?? '';
 
   useEffect(() => {
-    // Fetch data from API or perform any necessary operations
-    // to populate the `users` state variable
-    // ...
+    async function fetchIdentity() {
+      try {
+        const web3 = new Web3('http://localhost:8545');
+        const contractInstance = new web3.eth.Contract(
+          Identity.abi,
+          '0xEDC3fB54878387Ba3328E13aD2A046283803D3E5'
+        );
+        const citizenArray = await contractInstance.methods.getAllIdentities().call();
+        console.log('list of identities', citizenArray);
 
-    // For demonstration purposes, we'll just set the state with the mock data immediately
-    setUsers([
-      {
-        din: '123456789',
-        ssn: '123-45-6789',
-        fullName: 'John Doe',
-        dateOfBirth: 946684800000, // January 1, 2000
-        residentialAddress: '123 Main St, Anytown, USA',
-        exists: true,
-        type: 'Passport',
-        status: 'Approved',
-        date: '07/10/2023'
-      },
-      {
-        din: '987654321',
-        ssn: '987-65-4321',
-        fullName: 'Jane Smith',
-        dateOfBirth: 915148800000, // January 1, 1999
-        residentialAddress: '456 Elm St, Anytown, USA',
-        exists: true,
-        type: 'Passport',
-        status: 'Rejected',
-        date: '07/11/2023'
+        // @ts-ignore
+        const fetchedUsers: User[] = citizenArray.map((citizen: Citizen) => ({
+          din: citizen.din,
+          ssn: citizen.ssn,
+          fullName: citizen.fullName,
+          dateOfBirth: citizen.dateOfBirth,
+          residentialAddress: citizen.residentialAddress,
+          exists: citizen.exists,
+          type: 'Passport',
+          status: 'Approved',
+          date: '07/10/2023',
+        }));
+
+        setUsers(fetchedUsers);
+      } catch (error) {
+        console.error('Failed to fetch identity', error);
       }
-    ]);
+    }
+
+    fetchIdentity();
   }, []);
 
-  const filteredUsers = users.filter(user =>
+  const filteredUsers = users.filter((user) =>
     user.fullName.toLowerCase().includes(search.toLowerCase())
   );
 

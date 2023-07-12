@@ -103,7 +103,7 @@ ganache
 
 Compile and deploy contracts to the local Ganache network.
 For testing purposes, run all migrations from the beginning,
-regardless of whether they have been previously deployed.
+regardless of whether they have been previously deployed using `--reset`.
 
 ```bash
 truffle migrate — reset
@@ -129,8 +129,21 @@ Creates a build folder and creates a JSON representation of the contract's metho
 truffle compile 
 ```
 
-Inspect a transaction on the network
+Inspect a transaction on the network (truffle)
 
 ```javascript
-web3.eth.getTransaction('TRANSACTION_HASH').then(console.log)
+web3.eth.getTransaction('TRANSACTION_HASH')
+```
+
+Check Identity Contract in truffle console
+
+```javascript
+const instance = await Identity.deployed()
+let accounts = await web3.eth.getAccounts()
+(async()=>console.log((await instance.getIdentityCount()).toString()))(); // check number of identities
+
+```
+
+```javascript
+
 ```

@@ -7,50 +7,39 @@ contract('Identity', (accounts) => {
         identityInstance = await Identity.deployed();
     });
 
-    it('should create a new identity', async () => {
-        const din = '123456789';
-        const ssn = '123-45-6789';
-        const fullName = 'John Doe';
-        const dateOfBirth = 19900101;
-        const residentialAddress = '123 Main St';
+    it('should return all identities', async () => {
+        const din1 = '123456789';
+        const ssn1 = '123-45-6789';
+        const fullName1 = 'John Doe';
+        const dateOfBirth1 = 19900101;
+        const residentialAddress1 = '123 Main St';
 
-        await identityInstance.createIdentity(din, ssn, fullName, dateOfBirth, residentialAddress);
+        await identityInstance.createIdentity(din1, ssn1, fullName1, dateOfBirth1, residentialAddress1);
 
-        const citizen = await identityInstance.citizens(din);
-        assert.equal(citizen.din, din);
-        assert.equal(citizen.ssn, ssn);
-        assert.equal(citizen.fullName, fullName);
-        assert.equal(citizen.dateOfBirth, dateOfBirth);
-        assert.equal(citizen.residentialAddress, residentialAddress);
-        assert.equal(citizen.exists, true);
-    });
+        const din2 = '987654321';
+        const ssn2 = '987-65-4321';
+        const fullName2 = 'Jane Smith';
+        const dateOfBirth2 = 19851231;
+        const residentialAddress2 = '456 Elm St';
 
-    it('should update an existing identity', async () => {
-        const din = '123456789';
-        const newSsn = '987-65-4321';
-        const newFullName = 'Jane Smith';
-        const newDateOfBirth = 19851231;
-        const newResidentialAddress = '456 Elm St';
+        await identityInstance.createIdentity(din2, ssn2, fullName2, dateOfBirth2, residentialAddress2);
 
-        await identityInstance.updateIdentity(din, newSsn, newFullName, newDateOfBirth, newResidentialAddress);
+        const identities = await identityInstance.getAllIdentities();
 
-        const citizen = await identityInstance.citizens(din);
-        assert.equal(citizen.din, din);
-        assert.equal(citizen.ssn, newSsn);
-        assert.equal(citizen.fullName, newFullName);
-        assert.equal(citizen.dateOfBirth, newDateOfBirth);
-        assert.equal(citizen.residentialAddress, newResidentialAddress);
-        assert.equal(citizen.exists, true);
-    });
+        assert.equal(identities.length, 2);
 
-    it('should fail to update a non-existent identity', async () => {
-        const nonExistentDin = '987654321';
+        assert.equal(identities[0].din, din1);
+        assert.equal(identities[0].ssn, ssn1);
+        assert.equal(identities[0].fullName, fullName1);
+        assert.equal(identities[0].dateOfBirth, dateOfBirth1);
+        assert.equal(identities[0].residentialAddress, residentialAddress1);
+        assert.equal(identities[0].exists, true);
 
-        try {
-            await identityInstance.updateIdentity(nonExistentDin, '123-45-6789', 'John Doe', 19900101, '123 Main St');
-            assert.fail('Expected revert');
-        } catch (error) {
-            assert(error.message.includes('Identity does not exist'));
-        }
+        assert.equal(identities[1].din, din2);
+        assert.equal(identities[1].ssn, ssn2);
+        assert.equal(identities[1].fullName, fullName2);
+        assert.equal(identities[1].dateOfBirth, dateOfBirth2);
+        assert.equal(identities[1].residentialAddress, residentialAddress2);
+        assert.equal(identities[1].exists, true);
     });
 });

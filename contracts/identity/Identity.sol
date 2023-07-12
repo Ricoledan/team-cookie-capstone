@@ -61,8 +61,21 @@ contract Identity {
         return citizenDINs.length;
     }
 
-    function getIdentity(string memory din) public view returns (string memory, string memory, string memory, uint256, string memory, bool) {
-        Citizen memory citizen = citizens[din];
-        return (citizen.din, citizen.ssn, citizen.fullName, citizen.dateOfBirth, citizen.residentialAddress, citizen.exists);
+    function getCitizenDINs() public view returns (string[] memory) {
+        return citizenDINs;
+    }
+
+    function getIdentity(string memory din) public view returns (Citizen memory) {
+        return citizens[din];
+    }
+
+    function getAllIdentities() public view returns (Citizen[] memory) {
+        Citizen[] memory result = new Citizen[](citizenDINs.length);
+
+        for (uint256 i = 0; i < citizenDINs.length; i++) {
+            result[i] = citizens[citizenDINs[i]];
+        }
+
+        return result;
     }
 }

@@ -16,8 +16,9 @@ export default function Home() {
             return;
         }
 
+        // walkthrough this piece
         try {
-            const web3 = new Web3('http://localhost:8545'); // assuming Ganache is running on this port
+            const web3 = new Web3('http://localhost:8545');
             const accounts = await web3.eth.getAccounts();
             const tx = {
                 from: accounts[0],
@@ -27,7 +28,12 @@ export default function Home() {
             };
             const receipt = await web3.eth.sendTransaction(tx);
 
-            console.log(`Transaction receipt: ${receipt}`);
+            console.log(`Transaction hash: ${receipt.transactionHash}`);
+            console.log(`From address: ${receipt.from}`);
+            console.log(`To address: ${receipt.to}`);
+            console.log(`Gas used: ${receipt.gasUsed}`);
+            console.log(`Cumulative gas used: ${receipt.cumulativeGasUsed}`);
+            console.log(`Transaction status: ${receipt.status}`);
             console.log(`Submitted SSN: ${ssn}, Full Name: ${fullName}, Date of Birth: ${dateOfBirth}, Residential Address: ${residentialAddress}`);
 
             setSubmitted(true); // Update form submission status
