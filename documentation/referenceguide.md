@@ -1,5 +1,9 @@
 # Step-by-Step Reference Guide to IDme Application
 
+We are using Ganache to simulate an Ethereum network on our local machine.
+Ganache is a personal blockchain for Ethereum development that you can use to deploy contracts,
+develop applications, and run tests. Here I use the command line interface (CLI) to run Ganache.
+
 ## Output from Truffle
 
 ```bash 
@@ -9,13 +13,19 @@
   Block time: Tue Jul 11 2023 09:31:09 GMT-0400 (Eastern Daylight Time)
 ```
 
-The code snippet above shows the output from Truffle, a development framework for Ethereum. It provides information
-about a transaction, including the transaction hash, gas usage, block number, and block time.
-
-**Give notes around a form
-**User input and eventing in react
+The code snippet above is an example of the output from Truffle, a development framework for Ethereum.
+It provides information about a transaction, including the transaction hash, gas usage, block number, and block time.
 
 ## Transaction Details
+
+Using Truffle console, you can view the details of a transaction by using the **getTransaction** function
+
+```bash
+web3.eth.getTransaction('0x7636ef0b784e2aaf3bfd21ffc44de2c3f06a84fffac81178195014d53be98570')
+```
+
+When this function is called,
+it communicates with the Ethereum node and retrieves the transaction data associated with this hash.
 
 ```bash 
 {
@@ -37,11 +47,10 @@ about a transaction, including the transaction hash, gas usage, block number, an
 }
 ```
 
-The code snippet above represents a JavaScript object containing user input and event data in a React application. It
-includes various properties such as hash, type, nonce, blockHash, blockNumber, transactionIndex, from, to, value, gas,
-gasPrice, input, v, r, and s.
+The code snippet above represents a transaction object containing various details such as the hash (unique identifier),
+transaction type etc.
 
-On the transaction details page, you'll find the following information about each transaction:
+### Reference Key
 
 - **Hash**: This is the unique identifier of the transaction, also known as the transaction hash or txhash. It is
   calculated by taking the hash of the entire transaction data.
@@ -86,81 +95,79 @@ characteristics.
 
 ## User Input and Eventing in React
 
-``` javascript
+client/app/form.tsx
+
+``` jsx
 
 try {
-    const web3 = new Web3('http://localhost:8545');
-    const accounts = await web3.eth.getAccounts();
-    const tx = {
-        from: accounts[0],
-        to: accounts[1],
-        value: web3.utils.toWei('0.1', 'ether'),
-        gas: 21000
-    };
-    const receipt = await web3.eth.sendTransaction(tx);
+            const web3 = new Web3('http://localhost:8545');
+            const accounts = await web3.eth.getAccounts();
+            const tx = {
+                from: accounts[0],
+                to: accounts[1],
+                value: web3.utils.toWei('0.1', 'ether'),
+                gas: 21000
+            };
+            const receipt = await web3.eth.sendTransaction(tx);
 
-    console.log(`Transaction receipt: ${receipt}`);
-    console.log(`Submitted SSN: ${ssn}, Full Name: ${fullName}, Date of Birth: ${dateOfBirth}, Residential Address: ${residentialAddress}`);
+            console.log(`Transaction hash: ${receipt.transactionHash}`);
+            console.log(`From address: ${receipt.from}`);
+            console.log(`To address: ${receipt.to}`);
+            console.log(`Gas used: ${receipt.gasUsed}`);
+            console.log(`Cumulative gas used: ${receipt.cumulativeGasUsed}`);
+            console.log(`Transaction status: ${receipt.status}`);
+            console.log(
+              `Submitted SSN: ${ssn}, Full Name: ${fullName}, Date of Birth: ${dateOfBirth}, Residential Address: ${residentialAddress}`
+            );
 
-    setSubmitted(true); // Update form submission status
-    setError(""); // Clear any previous error messages
-} catch (error) {
-    // Handle error during transaction submission
-    setError("An error occurred during form submission.");
-}
+            // Store form values in local storage
+            const formData = { ssn, fullName, dateOfBirth, residentialAddress };
+            const updatedFormValues = [...formValues, formData];
+            // @ts-ignore
+            setFormValues(updatedFormValues);
+            setSubmitted(true); // Update form submission status
+            setError(''); // Clear any previous error messages
+        } catch (error) {
+            // Handle error during transaction submission
+            setError('An error occurred during form submission.');
+        }
 
 ```
 
-This code snippet demonstrates a try-catch block used to handle transaction submission in a React application. Here's a
-breakdown of what the code does:
+### Summary
 
-It creates a connection to an Ethereum node using the Web3 library and fetches the available accounts.
-A transaction object (tx) is defined with properties such as from, to, value, and gas.
-The transaction is sent to the blockchain using web3.eth.sendTransaction(tx), and the receipt is stored in the receipt
-variable.
-The transaction receipt and the submitted user data are logged to the console.
-The setSubmitted function is called to update the form submission status.
-The setError function is called to clear any previous error messages.
-If an error occurs during the execution of the try block, the catch block handles it by setting an error message.
-The purpose of this code is to handle the submission of a form in a React application that involves sending a
-transaction to an Ethereum network. It utilizes the Web3 library to interact with the Ethereum blockchain and performs
-error handling for transaction submission.
+The overall purpose of this code is to send a small amount of Ether from one account to another on a local
+Ethereum blockchain as part of a form submission process
 
-``` javascript
+Here's a breakdown of what the code does:
 
+* It creates a connection to an Ethereum node using the Web3 library and fetches the available accounts
+* A transaction object (tx) is defined with properties such as from, to, value, and gas.
+* The transaction is sent to the blockchain using web3.eth.sendTransaction(tx), and the receipt is stored in the receipt
+  variable.
+
+```javascript
+const web3 = new Web3('http://localhost:8545');
+const accounts = await web3.eth.getAccounts();
 const tx = {
-    from: accounts[0],
-    to: accounts[1],
-    value: web3.utils.toWei('0.1', 'ether'),
-    gas: 21000
+  from: accounts[0],
+  to: accounts[1],
+  value: web3.utils.toWei('0.1', 'ether'),
+  gas: 21000
 };
-
+const receipt = await web3.eth.sendTransaction(tx);
 ```
 
-from: accounts[0] specifies the sender of the transaction, which is the first account from the fetched list of accounts.
-to: accounts[1] specifies the receiver of the transaction, which is the second account in the list.
-value: web3.utils.toWei('0.1', 'ether') sets the amount of Ether to send in the transaction. web3.utils.toWei() is a
-utility function that converts Ether to wei (1 Ether = 10^18 wei) since all amounts on the Ethereum blockchain are
-denominated in wei to avoid fractional numbers.
-gas: 21000 sets the amount of gas to use for the transaction. 21,000 is the gas amount required to send a simple
-transaction that doesn't interact with a smart contract on Ethereum.
-const receipt = await web3.eth.sendTransaction(tx); This line sends the transaction to the blockchain and waits for it
-to be mined. Once the transaction is mined, it returns a receipt that contains details about the transaction.
-console.log(Transaction receipt: ${receipt}); This line logs the transaction receipt to the console.
-console.log(Submitted SSN: ${ssn}, Full Name: ${fullName}, Date of Birth: ${dateOfBirth}, Residential Address:
-${residentialAddress}); This line logs some personal information to the console. The variables ssn, fullName,
-dateOfBirth, and residentialAddress are likely defined elsewhere in the script.
-setSubmitted(true); This line updates the form submission status, presumably marking it as submitted. setSubmitted is
-likely a function defined elsewhere in your code.
-setError(""); This line clears any previous error messages. setError is likely a function defined elsewhere in your
-code.
-If an error occurs during the execution of the try block (e.g., if there's a problem connecting to the Ethereum node or
-sending the transaction), control will pass to the catch block. The catch block logs an error message using setError("An
-error occurred during form submission.");.
+* from: accounts[0] specifies the sender of the transaction, which is the first account from the fetched list of
+  accounts.
+* to: accounts[1] specifies the receiver of the transaction, which is the second account in the list.
+* value: web3.utils.toWei('0.1', 'ether') sets the amount of Ether to send in the transaction.
+* gas: 21000 sets the amount of gas to use for the transaction.
+* The ```const receipt = await web3.eth.sendTransaction(tx)``` line sends the transaction to the blockchain and waits
+  for it
+  to be mined. Once the transaction is mined, it returns a receipt that contains details about the transaction.
 
-The overall purpose of this script seems to be to send a small amount of Ether from one account to another on a local
-Ethereum blockchain, likely as part of a form submission process where the user also inputs personal details such as
-their social security number (SSN), full name, date of birth, and residential address.
+And we console.log additional information for debugging purposes
 
 ``` jsx
     return (
@@ -211,16 +218,22 @@ their social security number (SSN), full name, date of birth, and residential ad
     );
 ```
 
-The component conditionally renders content based on the submitted variable. If submitted is true, it displays a success
-message. Otherwise, it renders the form.
+We use React to display a form component that conditionally renders content based on the submitted variable:
 
-The form includes input fields for SSN, Full Name, Date of Birth, and Residential Address. Each input field is bound to
-a corresponding state variable (e.g., ssn, fullName) using the value attribute and updated using the onChange event
-handler.
-The form also handles form submission by calling the handleSubmit function defined elsewhere.
-Error handling is implemented by displaying an error message (error) if it exists.
-The setSubmitted and setError functions are called to update the form submission status and clear any previous error
-messages.
-Styling classes are applied to elements using tailwind CSS classes.
-This code snippet represents a form component in a React application that allows users to input personal details and
-handles form submission and error handling.
+* If submitted is true, it displays a success message. Otherwise, it renders the form.
+* The form includes input fields for SSN, Full Name, Date of Birth, and Residential Address.
+* Each input field is bound to a corresponding state variable (e.g., ssn, fullName) using the value attribute and
+  updated using the onChange event handler.
+* The form also handles form submission by calling the **handleSubmit** function.
+* Error handling is implemented by displaying an error message (error) if it exists.
+* The setSubmitted and setError functions are called to update the form submission status and clear any previous error
+  messages. 
+* Styling classes are applied to elements using tailwind CSS classes.
+  This code snippet represents a form component in a React application that allows users to input personal details and
+  handles form submission and error handling.
+
+## Smart Contracts
+
+
+
+## Conclusion
