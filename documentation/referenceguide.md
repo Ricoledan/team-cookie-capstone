@@ -260,7 +260,7 @@ Access Control
 contracts/identity/Identity.sol
 
 * struct Citizen: This is a struct that represents a citizen's identity. It includes fields for a decentralized identity number (din), social security number (ssn), full name, date of birth, residential address, and an "exists" boolean to check the existence of an identity.
-* mapping(string => Citizen) public citizens: This is a mapping from a string (presumably the din) to a Citizen struct. This serves as the storage for all citizens' identity information.
+* mapping(string => Citizen) public citizens: This is a mapping from a din to a Citizen struct. This serves as the storage for all citizens' identity information.
 * string[] public citizenDINs: This is an array to hold all decentralized identity numbers (din), used to iterate over all citizens. 
 * event IdentityCreated(string indexed din): This event is emitted when a new identity is created. 
 * event IdentityUpdated(string indexed din): This event is emitted when an existing identity is updated. 
