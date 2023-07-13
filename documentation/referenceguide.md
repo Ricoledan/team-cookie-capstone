@@ -227,13 +227,46 @@ We use React to display a form component that conditionally renders content base
 * The form also handles form submission by calling the **handleSubmit** function.
 * Error handling is implemented by displaying an error message (error) if it exists.
 * The setSubmitted and setError functions are called to update the form submission status and clear any previous error
-  messages. 
+  messages.
 * Styling classes are applied to elements using tailwind CSS classes.
   This code snippet represents a form component in a React application that allows users to input personal details and
   handles form submission and error handling.
 
 ## Smart Contracts
 
+### Folder Structure
 
+- **contracts**: Contains the Solidity smart contract files.
+- **migrations**: Contains the migration scripts for deploying smart contracts.
+- **test**: Contains test scripts for smart contract testing.
 
-## Conclusion
+### Theme
+
+Core Feature Set
+* Decentralized Identity: Solution enables citizens to generate a blockchain-stored identity using public and private
+  keys.
+* License Issuance: Enables license request and renewal. Upon approval, the citizen's identity is recorded
+  and a license is issued.
+* License Verification: Authenticity of a license can be verified by scanning a QR code linked to the citizen's public
+  key.
+* License Traceability: Facilitates identity tracing across different government agencies via QR code and public key.
+
+Access Control
+* Privacy: Provides control to citizens over personal data sharing with different government agencies.
+* Security: Enhances data security by giving citizens the discretion to decide the extent of their information shared
+  with various government agencies.
+
+### Identity.sol
+contracts/identity/Identity.sol
+
+* struct Citizen: This is a struct that represents a citizen's identity. It includes fields for a decentralized identity number (din), social security number (ssn), full name, date of birth, residential address, and an "exists" boolean to check the existence of an identity.
+* mapping(string => Citizen) public citizens: This is a mapping from a string (presumably the din) to a Citizen struct. This serves as the storage for all citizens' identity information.
+* string[] public citizenDINs: This is an array to hold all decentralized identity numbers (din), used to iterate over all citizens. 
+* event IdentityCreated(string indexed din): This event is emitted when a new identity is created. 
+* event IdentityUpdated(string indexed din): This event is emitted when an existing identity is updated. 
+* function createIdentity(): This function allows the creation of a new citizen identity. It requires that the identity does not already exist. It emits the IdentityCreated event. 
+* function updateIdentity(): This function allows the updating of an existing citizen identity. It requires that the identity already exists. It emits the IdentityUpdated event. 
+* function getIdentityCount(): This function returns the total count of identities created so far. 
+* function getCitizenDINs(): This function returns all the decentralized identity numbers (din) stored in the contract. 
+* function getIdentity(): This function returns the identity information of a citizen given their din. 
+* function getAllIdentities(): This function returns the identity information of all citizens stored in the contract.
